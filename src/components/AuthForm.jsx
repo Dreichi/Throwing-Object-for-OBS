@@ -13,9 +13,11 @@ const AuthForm = ({ onAuth }) => {
   
     const handleSubmit = (e) => {
       e.preventDefault();
-      localStorage.setItem('username', username);
-      onAuth(username);
+      const lowercaseUsername = username.toLowerCase();
+      localStorage.setItem('username', lowercaseUsername);
+      onAuth(lowercaseUsername);
     };
+    
 
   return (
     <form onSubmit={handleSubmit}>

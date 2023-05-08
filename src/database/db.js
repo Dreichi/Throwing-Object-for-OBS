@@ -18,14 +18,8 @@ export const setUser = async (username, data) => {
   try {
     const usersCollection = collection(db, 'users');
     const userDocRef = doc(usersCollection, username);
-    await setDoc(userDocRef, data, { merge: true });
+    await setDoc(userDocRef, { ...data}, { merge: true });
   } catch (error) {
     console.error("Error writing document:", error);
   }
 };
-
-
-
-
-
-

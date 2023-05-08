@@ -5,10 +5,11 @@ import ImageAnimation from './ImageAnimation';
 
 const UserAnimation = () => {
   const { username } = useParams();
+  const { hitboxVisible } = useParams();
 
   return (
     <div>
-      <ImageAnimation username={username} />
+      <ImageAnimation username={username} hitboxVisible={hitboxVisible} />
     </div>
   );
 };

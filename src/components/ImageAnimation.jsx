@@ -1,14 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Matter from 'matter-js';
-import '../css/ImageAnimation.css';
 import tmi from 'tmi.js';
 import { getUser } from '../database/db';
 
 import image1 from '../images/1.png';
 import image2 from '../images/2.png';
+import image3 from '../images/3.png';
 
-const ImageAnimation = ({ username}) => {
+const ImageAnimation = ({ username }) => {
   const sceneRef = useRef(null);
+  const [hitboxVisible, setHitboxVisible] = useState(null);
   const [customRewardId, setCustomRewardId] = useState(null);
 
   useEffect(() => {
@@ -22,6 +23,18 @@ const ImageAnimation = ({ username}) => {
     fetchCustomRewardId();
   }, [username]);
 
+  useEffect(() => {
+    const fecthHitboxVisibility = async () => {
+      const userData = await getUser(username);
+      if (userData && userData.hasOwnProperty("hitboxVisible")) {
+        setHitboxVisible(userData.hitboxVisible);
+      }
+    }
+
+    fecthHitboxVisibility();
+  }, [hitboxVisible, username]);
+  
+
   const Engine = Matter.Engine,
     Render = Matter.Render,
     World = Matter.World,
@@ -32,7 +45,7 @@ const ImageAnimation = ({ username}) => {
   const runner = Runner.create();
 
   const spawnImage = useCallback(async () => {
-    const imagesArray = [image1, image2];
+    const imagesArray = [image1, image2, image3];
 
     const getRandomImageUrl = () => {
       const randomIndex = Math.floor(Math.random() * imagesArray.length);
@@ -58,12 +71,13 @@ const ImageAnimation = ({ username}) => {
       const randomPosition = spawnPositions[Math.floor(Math.random() * spawnPositions.length)];
 
       const imageTexture = Matter.Bodies.rectangle(randomPosition.x, randomPosition.y, imageWidth, imageHeight, {
+        chamfer: { radius: 5 },
         angle: Math.PI / 4,
         render: {
           sprite: {
             texture: image.src,
-            xScale: 0.25,
-            yScale: 0.25,
+            xScale: 0.35,
+            yScale: 0.35,
           },
         },
       });
@@ -129,8 +143,10 @@ const ImageAnimation = ({ username}) => {
 
     const humanHitbox = Bodies.rectangle(window.innerWidth / 2, window.innerHeight / 2, 100, 400, {
       isStatic: true,
-      render: { visible: true },
+      render: { visible: hitboxVisible },
     });
+    
+    
 
     World.add(engine.world, [ground, humanHitbox]);
 
@@ -144,7 +160,7 @@ const ImageAnimation = ({ username}) => {
       Engine.clear(engine);
       engine.events = {};
     };
-  }, [Bodies, Engine, Render, Runner, World, engine, runner, spawnImage, username, customRewardId]);
+  }, [Bodies, Engine, Render, Runner, World, engine, runner, spawnImage, username, customRewardId, hitboxVisible]);
 
 
   return (
