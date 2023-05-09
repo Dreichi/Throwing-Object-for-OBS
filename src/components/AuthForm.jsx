@@ -20,7 +20,7 @@ const AuthForm = () => {
     const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
     authUrl.searchParams.append('response_type', 'token');
     authUrl.searchParams.append('client_id', '6t0m3g0mijn4ncy9lzu7r7z5xz4yji');
-    authUrl.searchParams.append('redirect_uri', 'http://localhost:3000/auth/callback');
+    authUrl.searchParams.append('redirect_uri', 'https://throwing-by-louanyaa.netlify.app/auth/callback');
     authUrl.searchParams.append('scope', 'user:read:email');
     window.location.href = authUrl.toString();
   };
