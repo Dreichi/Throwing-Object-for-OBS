@@ -11,9 +11,10 @@ const Dashboard = ({ username }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('username');
+    sessionStorage.removeItem('access_token'); 
+    sessionStorage.removeItem('username');
     navigate('/');
-    window.location.reload();
+    console.log('Déconnexion réussie');
   };
 
   return (

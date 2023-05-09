@@ -1,37 +1,38 @@
-import React, { useState, useEffect } from 'react';
+// AuthForm.js
+import React from 'react';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+const AuthForm = () => {
+  const navigate = useNavigate();
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  };
 
-const AuthForm = ({ onAuth }) => {
-    const [username, setUsername] = useState('');
-  
-    useEffect(() => {
-      const savedUsername = localStorage.getItem('username');
-      if (savedUsername) {
-        setUsername(savedUsername);
-      }
-    }, []);
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      const lowercaseUsername = username.toLowerCase();
-      localStorage.setItem('username', lowercaseUsername);
-      onAuth(lowercaseUsername);
-    };
-    
+  useEffect(() => {
+    const accessToken = sessionStorage.getItem('access_token');
+    if (accessToken) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
+
+  const handleTwitchAuth = () => {
+    const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
+    authUrl.searchParams.append('response_type', 'token');
+    authUrl.searchParams.append('client_id', '6t0m3g0mijn4ncy9lzu7r7z5xz4yji');
+    authUrl.searchParams.append('redirect_uri', 'http://localhost:3000/auth/callback');
+    authUrl.searchParams.append('scope', 'user:read:email');
+    window.location.href = authUrl.toString();
+  };
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        Nom d'utilisateur twitch :
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </label>
-      <button type="submit">Se connecter</button>
+      <button type="button" onClick={handleTwitchAuth}>
+        Se connecter à Twitch
+      </button>
     </form>
   );
 };
 
 export default AuthForm;
+
