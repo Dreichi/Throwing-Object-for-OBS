@@ -16,8 +16,6 @@ const AuthCallback = () => {
       const data = await response.json();
       if (data.data && data.data.length > 0) {
         const { login, email } = data.data[0];
-        console.log('Username:', login);
-        console.log('Email:', email);
         sessionStorage.setItem('username', login);
         sessionStorage.setItem('email', email);
       }
@@ -29,14 +27,17 @@ const AuthCallback = () => {
   useEffect(() => {
     const hashParams = new URLSearchParams(window.location.hash.substr(1));
     const accessToken = hashParams.get('access_token');
-
+  
     if (accessToken) {
       try {
         sessionStorage.setItem('access_token', accessToken);
         console.log('Access token set in sessionStorage:', accessToken);
-        fetchUserData(accessToken);
-        console.log('Navigating to /dashboard...');
-        navigate('/dashboard');
+        fetchUserData(accessToken).then(() => {
+          // Dispatch the custom event when user data is stored in sessionStorage
+          window.dispatchEvent(new Event('userLoaded'));
+          console.log('Navigating to /dashboard...');
+          navigate('/dashboard');
+        });
       } catch (error) {
         console.error('Error setting sessionStorage:', error);
       }
@@ -44,6 +45,7 @@ const AuthCallback = () => {
       navigate('/');
     }
   }, [navigate]);
+  
 
   return (
     <div>
