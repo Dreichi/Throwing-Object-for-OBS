@@ -2,7 +2,6 @@
   "name": "throwing-system",
   "version": "0.1.0",
   "private": true,
-  "homepage":".",
   "dependencies": {
     "-": "^0.0.1",
     "@babel/core": "^7.21.8",
