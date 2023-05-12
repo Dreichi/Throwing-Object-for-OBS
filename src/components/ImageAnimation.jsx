@@ -70,14 +70,16 @@ const ImageAnimation = ({ username }) => {
 
       const randomPosition = spawnPositions[Math.floor(Math.random() * spawnPositions.length)];
 
-      const imageTexture = Matter.Bodies.rectangle(randomPosition.x, randomPosition.y, imageWidth, imageHeight, {
+      const xScale = 0.35;
+      const yScale = 0.35;
+      const imageTexture = Matter.Bodies.rectangle(randomPosition.x, randomPosition.y, imageWidth * xScale, imageHeight * yScale, {
         chamfer: { radius: 5 },
         angle: Math.PI / 4,
         render: {
           sprite: {
             texture: image.src,
-            xScale: 0.35,
-            yScale: 0.35,
+            xScale: xScale,
+            yScale: yScale,
           },
         },
       });

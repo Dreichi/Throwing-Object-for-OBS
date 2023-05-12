@@ -79,17 +79,27 @@ const AuthForm = () => {
   
         const randomPosition = spawnPositions[Math.floor(Math.random() * spawnPositions.length)];
 
-        const image = Bodies.rectangle(randomPosition.x, randomPosition.y, img.width, img.height, {
-          render: {
-            sprite: {
-              texture: randomImagePath,
-              xScale: 0.5,
-              yScale: 0.5,
+        const xScale = 0.5;
+        const yScale = 0.5;
+        
+        const image = Bodies.rectangle(
+          randomPosition.x,
+          randomPosition.y,
+          img.width * xScale,
+          img.height * yScale,
+          {
+            render: {
+              sprite: {
+                texture: randomImagePath,
+                xScale: xScale,
+                yScale: yScale,
+              },
             },
-          },
-        });
+          }
+        );
+        
 
-        const humanHitbox = Bodies.rectangle(window.innerWidth / 2, window.innerHeight / 2, 380, 180, {
+        const humanHitbox = Bodies.rectangle(window.innerWidth / 2, window.innerHeight / 2, 390, 160, {
           isStatic: true,
           render: { visible: false },
         });
