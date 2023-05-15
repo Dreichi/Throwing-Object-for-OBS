@@ -1,5 +1,5 @@
 import { db } from '../firebaseConfig';
-import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, getDocs } from 'firebase/firestore';
 
 export const getUser = async (username) => {
   const usersCollection = collection(db, 'users');
@@ -13,7 +13,6 @@ export const getUser = async (username) => {
   }
 };
 
-
 export const setUser = async (username, data) => {
   try {
     const usersCollection = collection(db, 'users');
@@ -22,4 +21,10 @@ export const setUser = async (username, data) => {
   } catch (error) {
     console.error("Error writing document:", error);
   }
+};
+
+export const getFeatures = async () => {
+  const featuresCollection = collection(db, 'features');
+  const featureSnapshot = await getDocs(featuresCollection);
+  return featureSnapshot.docs.map(doc => doc.data());
 };

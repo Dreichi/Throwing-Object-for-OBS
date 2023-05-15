@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.dashboard {
+    font-family: 'Poppins', sans-serif;
+    margin-left: 150px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto 1fr 1fr;
+    column-gap: 40px;
+    row-gap: 20px;
+    height: 100vh;
+  }
+  
+  .block {
+    background-color: #fff;
+    border-radius: 25px;
+    box-shadow: rgba(0, 0, 255, 0.25) 4px 4px 10px 3px;
+  }
+  
+.block-user {
+    margin-left: 100px;
+    margin-right: 10px;
+    grid-row: 1 / 2;
+    height: 100px;
+    font-size: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.block-params {
+    margin-left: 100px;
+    margin-right: 10px;
+    grid-row: 2/4;
+    margin-bottom: 20px;
+}
+
+.block-right{
+    grid-column: 2/3;
+}
+
+.block-feature {
+    margin-right: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.block-feature ul {
+    text-align: left;
+}
+
+.block-contact {
+    margin-right: 40px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.block-contact a {
+    text-decoration: none;
+}
+
+.block-video {
+    margin-right: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    padding-bottom: 40px;
+}

@@ -25,7 +25,7 @@ const AuthForm = () => {
     const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
     authUrl.searchParams.append('response_type', 'token');
     authUrl.searchParams.append('client_id', '6t0m3g0mijn4ncy9lzu7r7z5xz4yji');
-    authUrl.searchParams.append('redirect_uri', 'https://spank-twitch.fr/auth/callback');
+    authUrl.searchParams.append('redirect_uri', 'http://localhost:3000/auth/callback');
     authUrl.searchParams.append('scope', 'user:read:email');
     window.location.href = authUrl.toString();
   };
@@ -99,7 +99,7 @@ const AuthForm = () => {
         );
         
 
-        const humanHitbox = Bodies.rectangle(window.innerWidth / 2, window.innerHeight / 2, 390, 160, {
+        const humanHitbox = Bodies.rectangle(window.innerWidth / 2, window.innerHeight / 2, 560, 360, {
           isStatic: true,
           render: { visible: false },
         });
@@ -132,9 +132,10 @@ const AuthForm = () => {
 
   return (
     <div className='container'>
-      <form className='form' onSubmit={handleSubmit}>
-      <h1>Bienvenue sur SPANK !</h1>
-        <button type="button" onClick={handleTwitchAuth}>
+      <form className='form-login' onSubmit={handleSubmit}>
+      <h1 className='title-login'>Bienvenue sur</h1>
+      <h2 className='title-login'>SPANK !</h2>
+        <button className='button-login' type="button" onClick={handleTwitchAuth}>
           Connexion
         </button>
       </form>

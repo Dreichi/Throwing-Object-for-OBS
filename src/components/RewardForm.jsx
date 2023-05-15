@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { setUser, getUser } from '../database/db';
 
-const RewardForm = ({ username, customRewardId, onRewardIdSet }) => {
+const RewardForm = ({ username, onRewardIdSet }) => {
   const [currentRewardId, setCurrentRewardId] = useState('');
   const [hitboxVisible, setHitboxVisible] = useState(true);
 
@@ -21,6 +21,61 @@ const RewardForm = ({ username, customRewardId, onRewardIdSet }) => {
     setHitboxVisible(event.target.checked);
   };
 
+  async function getAppAccessToken() {
+    const clientId = '6t0m3g0mijn4ncy9lzu7r7z5xz4yji';
+    const clientSecret = '3lpe1pfuu6sls5q4nzv75nikpamz46';
+  
+    const response = await fetch('https://id.twitch.tv/oauth2/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        client_id: clientId,
+        client_secret: clientSecret,
+        grant_type: 'client_credentials',
+      }),
+    });
+  
+    const data = await response.json();
+    if (data.access_token) {
+      return data.access_token;
+    } else {
+      throw new Error('Failed to get app access token');
+    }
+  }
+  
+
+  const subscribeWebhook = async (rewardId) => {
+    const appAccessToken = await getAppAccessToken();
+    console.log(appAccessToken);
+  
+    const response = await fetch('https://api.twitch.tv/helix/eventsub/subscriptions', {
+      method: 'POST',
+      headers: {
+        'Client-ID': '6t0m3g0mijn4ncy9lzu7r7z5xz4yji',
+        'Authorization': `Bearer ${appAccessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        type: 'channel.channel_points_custom_reward_redemption.add',
+        version: '1',
+        condition: {
+          broadcaster_user_id: sessionStorage.getItem('id'),
+          reward_id: rewardId,
+        },
+        transport: {
+          method: 'webhook',
+          callback: `${window.location.origin}/api/webhooks`,
+          secret: 'your_secret_string',
+        },
+      }),
+    });
+  
+    const data = await response.json();
+    console.log(data);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const userData = await getUser(username);
@@ -34,11 +89,10 @@ const RewardForm = ({ username, customRewardId, onRewardIdSet }) => {
     };
     fetchData();
   }, [username, onRewardIdSet]);
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="customRewardId" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="customRewardId">
           Entrez l'ID de la récompense personnalisée:
         </label>
         <input
@@ -47,12 +101,11 @@ const RewardForm = ({ username, customRewardId, onRewardIdSet }) => {
           name="customRewardId"
           value={currentRewardId}
           onChange={handleChange}
-          className="mt-1 block w-full py-2 px-3 border-2 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-base"
         />
       </div>
   
       <div className="flex items-center">
-        <label htmlFor="hitboxVisible" className="mr-2 block text-sm text-gray-700">
+        <label htmlFor="hitboxVisible">
           Visibilité de la hitbox :
         </label>
         <input
@@ -61,13 +114,11 @@ const RewardForm = ({ username, customRewardId, onRewardIdSet }) => {
           name="hitboxVisible"
           checked={hitboxVisible}
           onChange={handleHitboxVisibilityChange}
-          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
         />
       </div>
   
       <button
         type="submit"
-        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
       >
         Enregistrer
       </button>

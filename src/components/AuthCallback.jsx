@@ -1,6 +1,7 @@
 // AuthCallback.js
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { setUser } from '../database/db';
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -15,9 +16,14 @@ const AuthCallback = () => {
       });
       const data = await response.json();
       if (data.data && data.data.length > 0) {
-        const { login, email } = data.data[0];
+        const { login, email, profile_image_url, id } = data.data[0];
         sessionStorage.setItem('username', login);
         sessionStorage.setItem('email', email);
+        sessionStorage.setItem('profile_image_url', profile_image_url);
+        sessionStorage.setItem('id', id);
+        console.log(id);
+
+        await setUser(login, { email, profile_image_url, id });
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -33,7 +39,6 @@ const AuthCallback = () => {
         sessionStorage.setItem('access_token', accessToken);
         console.log('Access token set in sessionStorage:', accessToken);
         fetchUserData(accessToken).then(() => {
-          // Dispatch the custom event when user data is stored in sessionStorage
           window.dispatchEvent(new Event('userLoaded'));
           console.log('Navigating to /dashboard...');
           navigate('/dashboard');
